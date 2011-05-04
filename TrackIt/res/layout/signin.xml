@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView android:fillViewport="true"
+  			xmlns:android="http://schemas.android.com/apk/res/android"
+  			android:orientation="vertical" 
+  			android:layout_width="match_parent" 
+  			android:layout_height="wrap_content">
+<LinearLayout
+  
+  android:orientation="vertical" 
+  android:layout_width="match_parent" 
+  android:layout_height="wrap_content">
+  
+  <TextView android:id="@+id/textView1" 
+    		  android:text="Sign In" 
+    		  android:layout_gravity="center" 
+    		  android:textSize="40px" 
+    		  android:layout_height="wrap_content" 
+    		  android:layout_width="wrap_content" android:paddingBottom="30px">
+    		  
+    		  </TextView>
+    <TextView 
+    		  android:id="@+id/textView2" 
+    		  android:layout_width="wrap_content" 
+    		  android:text="Username :" 
+    		  android:layout_gravity="fill_horizontal" 
+    		  android:layout_height="wrap_content"
+    		  android:textSize="20px">
+    		  </TextView>
+    
+    <EditText  
+    		  android:layout_height="wrap_content" 
+    		  android:id="@+id/editText1" 
+    		  android:layout_width="wrap_content"
+    		  android:width="250dp" 
+    		  android:layout_gravity="right">
+    		  </EditText>
+    
+    <TextView  
+    		  android:id="@+id/textView3" 
+    		  android:layout_width="wrap_content" 
+    		  android:text="Password :" 
+    		  android:layout_gravity="fill_horizontal" 
+    		  android:layout_height="wrap_content"
+    		  android:textSize="20px">
+    		  </TextView>
+    
+    <EditText  
+    		  android:layout_height="wrap_content" 
+    		  android:id="@+id/editText2" 
+    		  android:password="true" 
+    		  android:layout_width="wrap_content"
+    		  android:width="250dp" 
+    		  android:layout_gravity="right">
+    		  </EditText>
+    
+    <Button android:text="Sign In" 
+    		android:layout_gravity="center" 
+    		android:layout_height="wrap_content" 
+    		android:layout_width="150px" 
+    		android:id="@+id/signinButton"
+    		android:layout_margin="20px"
+    		android:textSize="20px">
+    		</Button>
+  
+  
+  
+</LinearLayout>
+</ScrollView>
