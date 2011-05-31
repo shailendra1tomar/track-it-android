@@ -15,11 +15,13 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Toast;
 
 public class BusTrackit extends Activity {
     /** Called when the activity is first created. */
@@ -38,7 +40,7 @@ public class BusTrackit extends Activity {
         
         try{
              HttpClient httpclient = new DefaultHttpClient();
-             HttpPost httppost = new HttpPost("");
+             HttpPost httppost = new HttpPost("http://www.gotrackit.net/test.php");
              httppost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
              HttpResponse response = httpclient.execute(httppost);
              HttpEntity entity = response.getEntity();
@@ -59,6 +61,14 @@ public class BusTrackit extends Activity {
               }
               is.close();
               result=sb.toString();
+              
+              Context context = getApplicationContext();
+      		
+      		int duration = Toast.LENGTH_LONG;
+
+      		Toast toast = Toast.makeText(context, result, duration);
+      		toast.show();
+              
         }catch(Exception e){
              Log.e("log_tag", "Error converting result "+e.toString());
         }
