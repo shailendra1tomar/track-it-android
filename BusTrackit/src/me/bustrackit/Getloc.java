@@ -12,44 +12,50 @@ import android.widget.TextView;
 
 public class Getloc extends Activity {
 	
-	 String provider = LocationManager.GPS_PROVIDER;
-	 LocationManager locationManager;
 	@Override
 	 public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.loc);
         
+        String provider = LocationManager.GPS_PROVIDER;
+	   	 LocationManager locationManager;
+	   	 String context = Context.LOCATION_SERVICE;
+	     locationManager = (LocationManager) getSystemService(context); 
+	     Location location = locationManager.getLastKnownLocation(provider);
+	     updateWithNewLocation(location);
+	     locationManager.requestLocationUpdates(provider, 5000, 5, locationListener);
 
-       
-        String context = Context.LOCATION_SERVICE;
-        locationManager = (LocationManager) getSystemService(context);
-        
-       
-        Location location = locationManager.getLastKnownLocation(provider);
-        updateWithNewLocation(location);
-        
-        }
-        private void updateWithNewLocation(Location location){
-        	String latLongString;
-        	TextView myLocationText;
-        	locationManager.requestLocationUpdates(provider, 1000, 0, new LocationListener() {
-            	public void onLocationChanged(Location location) {}
-            	public void onProviderDisabled(String provider){}
-            	
-            	public void onProviderEnabled(String provider){}
-            	public void onStatusChanged(String provider, int status,
-            	Bundle extras){}
-            	});
-        	myLocationText = (TextView) findViewById(R.id.myLocationText);
-        	if(location != null) {
-        		double lat = location.getLatitude();
-        		double lng = location.getLongitude();
-        		latLongString = "Lat: "+ lat +"\nLong"+ lng;
-        	} else {
-        		latLongString = "No Location found";
-        	}
-        	myLocationText.setText("Current location  \n"+latLongString);
-        	
-	}
-        
+   }
+	     private void updateWithNewLocation(Location location) {
+	    	 String latLongString;
+	    	 TextView myLocationText;
+	    	 myLocationText = (TextView)findViewById(R.id.myLocationText);
+	    	 if (location != null) {
+	    	 double lat = location.getLatitude();
+	    	 double lng = location.getLongitude();
+	    	 latLongString = "Lat:" + lat + "\nLong:" + lng;
+	    	 } 
+	    	 else {
+	    	 latLongString = "No location found";
+	    	 }
+	    	 myLocationText.setText("Your Current Position is:\n" +
+	    	 latLongString);
+	    	 //Send lat & lng to server
+	     }
+	     
+	     private final LocationListener locationListener = new LocationListener() {
+	    	 public void onLocationChanged(Location location) {
+	    	 updateWithNewLocation(location);
+	    	 }
+	    	 public void onProviderDisabled(String provider){
+	    	 updateWithNewLocation(null);
+	    	 }
+	    	 public void onProviderEnabled(String provider){ }
+	    	 public void onStatusChanged(String provider, int status,
+	    	 Bundle extras){ }
+	    	 };
+
+   
+    
+
 }

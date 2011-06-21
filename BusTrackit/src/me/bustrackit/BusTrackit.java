@@ -11,7 +11,6 @@ import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
-import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
 
@@ -28,7 +27,7 @@ public class BusTrackit extends Activity {
     /** Called when the activity is first created. */
     
     //Login Authentication with server
-    String result = null;
+	String result = null;
     InputStream is = null;
     StringBuilder sb=null;
     @Override
@@ -58,6 +57,7 @@ public class BusTrackit extends Activity {
 		             HttpResponse response = httpclient.execute(httppost);
 		             HttpEntity entity = response.getEntity();
 		             is = entity.getContent();
+		        
 		        }catch(Exception e){
 		             Log.e("log_tag", "Error in http connection"+e.toString());
 		        }
@@ -77,12 +77,10 @@ public class BusTrackit extends Activity {
 		              result=sb.toString();
 		              
 		              Context context = getApplicationContext();
-		      		
-		      		int duration = Toast.LENGTH_LONG;
-
-		      		Toast toast = Toast.makeText(context, result, duration);
-		      		toast.show();
-		              
+		      		  int duration = Toast.LENGTH_LONG;
+		      		  Toast toast = Toast.makeText(context, result, duration);
+		      		  toast.show();
+		      		      
 		        }catch(Exception e){
 		             Log.e("log_tag", "Error converting result "+e.toString());
 		        }
