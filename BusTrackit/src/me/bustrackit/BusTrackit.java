@@ -21,8 +21,8 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.Toast;
-
 public class BusTrackit extends Activity {
     /** Called when the activity is first created. */
     
@@ -30,10 +30,17 @@ public class BusTrackit extends Activity {
 	String result = null;
     InputStream is = null;
     StringBuilder sb=null;
+    String username,password;
+    EditText textusername, textpassword;
+    
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
+        
+       
+         textusername = (EditText) findViewById(R.id.editTextUsername);
+         textpassword = (EditText) findViewById(R.id.editTextPassword);
         
         
         Button signinButton = (Button) findViewById(R.id.signinButton01);
@@ -42,17 +49,20 @@ public class BusTrackit extends Activity {
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
-				Intent myintent = new Intent(v.getContext(), Getloc.class);
-				startActivityForResult(myintent, 0);
+				
+				
+				username = textusername.getText().toString();
+				password = textpassword.getText().toString();
+				
 				
 				ArrayList<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(); 
-		        nameValuePairs.add(new name_value("rname","nasrcity"));
-		        
+		        nameValuePairs.add(new name_value("name",username));
+		        nameValuePairs.add(new name_value("driver_pass", password));
 		      
 
 		        try{
 		             HttpClient httpclient = new DefaultHttpClient();
-		             HttpPost httppost = new HttpPost("http://www.gotrackit.net/test.php");
+		             HttpPost httppost = new HttpPost("http://www.gotrackit.net/server/check_driver.php");
 		             httppost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
 		             HttpResponse response = httpclient.execute(httppost);
 		             HttpEntity entity = response.getEntity();
@@ -76,16 +86,33 @@ public class BusTrackit extends Activity {
 		              is.close();
 		              result=sb.toString();
 		              
-		              Context context = getApplicationContext();
-		      		  int duration = Toast.LENGTH_LONG;
-		      		  Toast toast = Toast.makeText(context, result, duration);
-		      		  toast.show();
-		      		      
+		              	             
+		              
 		        }catch(Exception e){
 		             Log.e("log_tag", "Error converting result "+e.toString());
 		        }
 		        
+		        
+		        if (result.contains("reject")) {
+		        	Context context = getApplicationContext();
+		      		  int duration = Toast.LENGTH_SHORT;
+		      		  String wrong ="Invalid  Username or Password";
+		      		  Toast toast = Toast.makeText(context, wrong, duration);
+		      		  toast.show();
+		        	
+		        }else{	
+		        	
+		        	MyApp bid = (MyApp)getApplicationContext();
+		             bid.setStringValue(result);
+		            
+		        		Intent myintent = new Intent(v.getContext(), Getloc.class);
+		        		 
+		        	
+						startActivityForResult(myintent, 0);
+		        	}
+		        
 			}
+			
 		});
         
     }

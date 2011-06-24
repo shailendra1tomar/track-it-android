@@ -22,7 +22,7 @@
     			android:textSize="20px"></TextView>
     
     <EditText android:layout_width="match_parent" 
-    			android:id="@+id/editText1" 
+    			android:id="@+id/editTextUsername" 
     			android:layout_height="wrap_content"></EditText>
 </TableRow>
 
@@ -37,7 +37,7 @@
     			android:layout_height="wrap_content"></TextView>
     
     <EditText android:layout_width="match_parent" 
-    			android:id="@+id/editText2" 
+    			android:id="@+id/editTextPassword" 
     			android:layout_height="wrap_content" 
     			android:password="true"></EditText>
 </TableRow>

@@ -17,8 +17,8 @@ public final class R {
     public static final class id {
         public static final int TextView01=0x7f050007;
         public static final int button1=0x7f050000;
-        public static final int editText1=0x7f050005;
-        public static final int editText2=0x7f050008;
+        public static final int editTextPassword=0x7f050008;
+        public static final int editTextUsername=0x7f050005;
         public static final int imageView1=0x7f050002;
         public static final int myLocationText=0x7f050001;
         public static final int signinButton01=0x7f050009;
