@@ -20,18 +20,6 @@
 	    	android:textSize="20px">
 	    	</Button>
     
-	<Button android:text="Sign Up" 
-		    android:layout_gravity="center" 
-		    android:layout_height="wrap_content" 
-		    android:layout_width="200px" 
-		    android:id="@+id/signupButton"
-		    android:textSize="20px">
-		    </Button>
-	<Button android:text="To Map" 
-			android:id="@+id/mapButton" 
-			android:layout_width="wrap_content" 
-			android:layout_height="wrap_content"></Button>
-    
 
 
 </LinearLayout>
