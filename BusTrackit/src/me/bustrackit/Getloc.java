@@ -37,7 +37,7 @@ public class Getloc extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.loc);
         
-        String provider = LocationManager.NETWORK_PROVIDER;		//GPS_PROVIDER
+        String provider = LocationManager.GPS_PROVIDER;		//GPS_PROVIDER
 	   	 LocationManager locationManager;
 	   	 String context = Context.LOCATION_SERVICE;
 	     locationManager = (LocationManager) getSystemService(context); 
@@ -53,21 +53,25 @@ public class Getloc extends Activity {
 	    	 if (location != null) {
 	    	  lat = location.getLatitude();
 	    	  lng = location.getLongitude();
-	    	  String latS = location.toString();
-	    	  String lngS = location.toString();
+	    	  
+	    	  String latS; 
+	    	  String lngS;
+	    	  
+	    	  latS = Double.toString(lat);
+	    	  lngS = Double.toString(lng);
 	    	//Send lat & lng to server
 	    	  MyApp bid = (MyApp)getApplicationContext();
 	    	  result= bid.getStringValue();
-		    	 //Context context = getApplicationContext();
+		    	 
+	    	  	  //Context context = getApplicationContext();
 	      		  //int duration = Toast.LENGTH_SHORT;
-	      		  
 	      		  //Toast toast = Toast.makeText(context,result , duration);
 	      		  //toast.show();
 		    	 
 		    	 ArrayList<NameValuePair> nameValuePairsLOC = new ArrayList<NameValuePair>(); 
 		    	 
 		    	 	nameValuePairsLOC.add(new name_value("bus_id",result));
-		    	 	nameValuePairsLOC.add(new name_value("lat",latS));
+		    	 	nameValuePairsLOC.add(new name_value("lat", latS));
 			        nameValuePairsLOC.add(new name_value("lng", lngS));
 			        
 			        try{
@@ -95,10 +99,10 @@ public class Getloc extends Activity {
 			              result2=sb.toString();
 			              
 			              Context contextcheck = getApplicationContext();
-			      		  int duration = Toast.LENGTH_LONG;
-			      		  Toast toast = Toast.makeText(contextcheck, result2, duration);
-			      		  toast.show();		             
-			              
+			      		  int durations = Toast.LENGTH_LONG;
+			      		  Toast toasts = Toast.makeText(contextcheck, result2, durations);
+			      		  toasts.show();	
+			      		 
 			        }catch(Exception e){
 			             Log.e("log_tag", "Error converting result "+e.toString());
 			        }
