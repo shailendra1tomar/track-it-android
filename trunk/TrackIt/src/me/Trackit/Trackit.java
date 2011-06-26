@@ -12,9 +12,8 @@ public class Trackit extends Activity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
-        Button mapButton = (Button) findViewById(R.id.mapButton);
-        Button signinButton =(Button) findViewById(R.id.signinButton01);
-        Button signupButton = (Button) findViewById(R.id.signupButton);
+      Button signinButton =(Button) findViewById(R.id.signinButton01);
+        
         signinButton.setOnClickListener(new View.OnClickListener() {
 			
 			@Override
@@ -26,24 +25,7 @@ public class Trackit extends Activity {
 			}
 		});
         
-        signupButton.setOnClickListener(new View.OnClickListener() {
-			
-			@Override
-			public void onClick(View x) {
-				// TODO Auto-generated method stub
-				Intent xyintent = new Intent(x.getContext(),Signup.class);
-				startActivityForResult(xyintent, 0);
-			}
-		});
-        mapButton.setOnClickListener(new View.OnClickListener() {
-			
-			@Override
-			public void onClick(View m) {
-				// TODO Auto-generated method stub
-				Intent mintent = new Intent(m.getContext(),Map.class);
-				startActivityForResult(mintent, 0);
-			}
-		});
+       
     
     }
 }
