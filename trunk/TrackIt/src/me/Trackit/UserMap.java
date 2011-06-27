@@ -18,6 +18,7 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -38,6 +39,11 @@ public class UserMap extends MapActivity {
 	OverlayItem overlayitem;
 	GeoPoint geoPoint;
 	MapView mapView;
+	MapController mController;
+	double lat = 30.060047;
+	double lng = 31.305294;  
+	Handler mHandler = new Handler();
+	
 	@Override
     protected boolean isRouteDisplayed() {
         return false;
@@ -52,7 +58,7 @@ public class UserMap extends MapActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.map);
         MyApp uid = (MyApp)getApplicationContext();
-  	  result= uid.getStringValue();
+  	    result= uid.getStringValue();
     
         mapView = (MapView) findViewById(R.id.mapview);
         
@@ -60,90 +66,129 @@ public class UserMap extends MapActivity {
         mapView.setFocusableInTouchMode(true);
         mapView.displayZoomControls(true);
         
-       mapOverlays = mapView.getOverlays();
+        mapOverlays = mapView.getOverlays();
         drawable = this.getResources().getDrawable(R.drawable.bus_icon);
         itemizedOverlay = new MItemizedOverlay(drawable);
         drawable2 = this.getResources().getDrawable(R.drawable.coolred_small);
         itemizedOverlay2 = new MItemizedOverlay(drawable2);
        
-       String provider = LocationManager.GPS_PROVIDER;
+         String provider = LocationManager.GPS_PROVIDER;
 	   	 LocationManager locationManager;
 	   	 String context = Context.LOCATION_SERVICE;
 	     locationManager = (LocationManager) getSystemService(context); 
 	     Location location = locationManager.getLastKnownLocation(provider);
-	     updateWithNewLocation(location);
-	 
-	     locationManager.requestLocationUpdates(provider, 10000, 10,locationListener);
 	     
+	     
+	     
+	     
+		  
+		  new Thread(new Runnable() {
+		        @Override
+		        public void run() {
+		            // TODO Auto-generated method stub
+		            while (true) {
+		                try {
+		                    Thread.sleep(15000);
+		                    itemizedOverlay.removeOverlay(overlayitem);
+		           	     mapOverlays.remove(overlayitem);
+		                    mHandler.post(new Runnable() {
+
+		                        @Override
+		                        public void run() {
+		                            // TODO Auto-generated method stub
+		                            requestcoord();
+		                        }
+		                    });
+		                } catch (Exception e) {
+		                    // TODO: handle exception
+		                }
+		            }
+		        }
+		    }).start();
+		   
+		  
+		 // updateWithNewLocation(location);
+		  //locationManager.requestLocationUpdates(provider, 5000, 5, locationListener);
+     	 
+		 
+				
+		 
+		 
+	}
+	private void requestcoord(){
+		ArrayList<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
+	    nameValuePairs.add(new name_value("uid", result));
+	    try{
+	        HttpClient httpclient = new DefaultHttpClient();
+	        HttpPost httppost = new HttpPost("http://www.gotrackit.net/server/getbuscoord.php");
+	        httppost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
+	        HttpResponse response = httpclient.execute(httppost);
+	        HttpEntity entity = response.getEntity();
+	        is = entity.getContent();
+	   
+	   }catch(Exception e){
+	        Log.e("log_tag", "Error in http connection"+e.toString());
+	   }
+
+	   //convert response to string
+	   try{
+	   	int r = -1;
+	   	StringBuffer reader = new StringBuffer();
+	   	while ((r = is.read()) != -1)
+	           reader.append((char) r);
+         
+	         String tagOpenlat = "<`latitude`>";
+	         String tagCloselat = "<`/latitude`>";
+	         String tagOpenlng = "<`longitude`>";
+	         String tagCloselng = "<`/longitude`>";
+	         if (reader.indexOf(tagOpenlat) != -1) {
+	       	  int start = reader.indexOf(tagOpenlat) + tagOpenlat.length();
+	       	  int end = reader.indexOf(tagCloselat);
+	       	  String value = reader.substring(start, end);
+	       	  blatitude = Double.parseDouble(value);
+	         }
+	         if (reader.indexOf(tagOpenlng) != -1) {
+	       	  int start = reader.indexOf(tagOpenlng) + tagOpenlng.length();
+	       	  int end = reader.indexOf(tagCloselng);
+	       	  String value = reader.substring(start, end);
+	       	  blongitude = Double.parseDouble(value);
+	         }
+	         is.close();
+	        //result2=sb.toString();
+	         
+	         	             
+	         
+	   }catch(Exception e){
+	        Log.e("log_tag", "Error converting result "+e.toString());
+	   }
+	  	  Context context = getApplicationContext();
+		  int duration = Toast.LENGTH_LONG;
+		  String bus = "latitude = " + blatitude + "\nlongitude = " + blongitude;
+		  Toast toast = Toast.makeText(context,bus, duration);
+		  toast.show();
+		  
+		  
+	   	 mController = mapView.getController();
+		    geoPoint = new GeoPoint((int) (lat *1E6), (int) (lng *1E6) );
+		    overlayitem = new OverlayItem(geoPoint, "Me","");
+		    itemizedOverlay2.addOverlay(overlayitem);
+		    mapOverlays.add(itemizedOverlay2);
+		    
+		   	GeoPoint point= new GeoPoint((int) ( blatitude*1E6), (int) ( blongitude*1E6) );
+		   	 overlayitem = new OverlayItem(point, "Bus", "");
+		   	itemizedOverlay.addOverlay(overlayitem);		   	
+			mapOverlays.add(itemizedOverlay);
+		   	mController.animateTo(point);
+		    mController.setCenter(point);
+			mController.setZoom(17);
 	}
 	private void updateWithNewLocation(Location location) {
-   	 String latLongString;
-     ArrayList<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
-     nameValuePairs.add(new name_value("uid", result));
-     try{
-         HttpClient httpclient = new DefaultHttpClient();
-         HttpPost httppost = new HttpPost("http://www.gotrackit.net/server/getbuscoord.php");
-         httppost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
-         HttpResponse response = httpclient.execute(httppost);
-         HttpEntity entity = response.getEntity();
-         is = entity.getContent();
-    
-    }catch(Exception e){
-         Log.e("log_tag", "Error in http connection"+e.toString());
-    }
-
-    //convert response to string
-    try{
-    	int r = -1;
-    	StringBuffer reader = new StringBuffer();
-    	while ((r = is.read()) != -1)
-            reader.append((char) r);
-          
-          String tagOpenlat = "<`latitude`>";
-          String tagCloselat = "<`/latitude`>";
-          String tagOpenlng = "<`longitude`>";
-          String tagCloselng = "<`/longitude`>";
-          if (reader.indexOf(tagOpenlat) != -1) {
-        	  int start = reader.indexOf(tagOpenlat) + tagOpenlat.length();
-        	  int end = reader.indexOf(tagCloselat);
-        	  String value = reader.substring(start, end);
-        	  blatitude = Double.parseDouble(value);
-          }
-          if (reader.indexOf(tagOpenlng) != -1) {
-        	  int start = reader.indexOf(tagOpenlng) + tagOpenlng.length();
-        	  int end = reader.indexOf(tagCloselng);
-        	  String value = reader.substring(start, end);
-        	  blongitude = Double.parseDouble(value);
-          }
-          is.close();
-         //result2=sb.toString();
-          
-          	             
-          
-    }catch(Exception e){
-         Log.e("log_tag", "Error converting result "+e.toString());
-    }
-   	  Context context = getApplicationContext();
-	  int duration = Toast.LENGTH_LONG;
-	  String bus = "latitude = " + blatitude + "\nlongitude = " + blongitude;
-	  Toast toast = Toast.makeText(context,bus, duration);
-	  toast.show();
-   	 
+		
+		
+		
+		 String latLongString;
 	  if (location != null) {
-   	 double lat = 30.060047;
-   	 double lng = 31.305294;
-   	MapController mController = mapView.getController();
-    geoPoint = new GeoPoint((int) (lat *1E6), (int) (lng *1E6) );
-    overlayitem = new OverlayItem(geoPoint, "Me","");
-    itemizedOverlay2.addOverlay(overlayitem);
-    mapOverlays.add(itemizedOverlay2);
-    mapView.getMaxZoomLevel();
-   	GeoPoint point= new GeoPoint((int) ( blatitude*1E6), (int) ( blongitude*1E6) );
-   	 overlayitem = new OverlayItem(point, "Bus", "");
-   	itemizedOverlay.addOverlay(overlayitem);
-   	mapOverlays.add(itemizedOverlay);
-   	mController.animateTo(point);
-    mController.setCenter(point);
+   	 
    	 latLongString = "Lat:" + lat + "\nLong:" + lng;
    	 } else {
    	 latLongString = "No location found";
@@ -156,8 +201,7 @@ public class UserMap extends MapActivity {
     
     private final LocationListener locationListener = new LocationListener() {
    	 public void onLocationChanged(Location location) {
-   		 itemizedOverlay.removeOverlay(overlayitem);
-   	     mapOverlays.remove(overlayitem);
+   		
    		 updateWithNewLocation(location);
     
    	 }
